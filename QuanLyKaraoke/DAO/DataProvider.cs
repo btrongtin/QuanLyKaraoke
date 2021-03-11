@@ -18,7 +18,7 @@ namespace QuanLyKaraoke.DAO
             private set { DataProvider.instance = value; }
         }
 
-        private string connectionSTR = @"Data Source=THISPC;Initial Catalog=KARAOKE;Integrated Security=True";
+        private string connectionSTR = @"Data Source=203-44\;Initial Catalog=KARAOKE;Integrated Security=True"; //@"Data Source=THISPC;Initial Catalog=KARAOKE;Integrated Security=True"; cai nay la cua may nha ne
 
         public DataTable ExecuteQuery(string query, object[] parameter = null)
         {

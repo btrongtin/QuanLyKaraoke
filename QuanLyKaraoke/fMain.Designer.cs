@@ -66,6 +66,10 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnCheckOut = new System.Windows.Forms.Button();
             this.flpRoom = new System.Windows.Forms.FlowLayoutPanel();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -110,11 +114,17 @@
             // 
             // lsvBill
             // 
+            this.lsvBill.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader4});
             this.lsvBill.Location = new System.Drawing.Point(0, 0);
             this.lsvBill.Name = "lsvBill";
             this.lsvBill.Size = new System.Drawing.Size(622, 241);
             this.lsvBill.TabIndex = 0;
             this.lsvBill.UseCompatibleStateImageBehavior = false;
+            this.lsvBill.View = System.Windows.Forms.View.Details;
             // 
             // panel3
             // 
@@ -423,6 +433,24 @@
             this.flpRoom.Size = new System.Drawing.Size(557, 620);
             this.flpRoom.TabIndex = 14;
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Ten mon";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "So Luong";
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Don gia";
+            this.columnHeader3.Width = 122;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Thanh tien";
+            this.columnHeader4.Width = 104;
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -494,6 +522,10 @@
         private System.Windows.Forms.Button btnCheckOut;
         private System.Windows.Forms.Button btnRoomStart;
         private System.Windows.Forms.FlowLayoutPanel flpRoom;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
 
 
     }

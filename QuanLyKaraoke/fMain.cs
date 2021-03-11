@@ -30,6 +30,10 @@ namespace QuanLyKaraoke
 
                 btn.Text = item.Name + Environment.NewLine + item.Status;
 
+                btn.Click += btn_Click;
+
+                btn.Tag = item;
+
                 switch (item.Status)
                 {
                     case "Có người":
@@ -41,11 +45,30 @@ namespace QuanLyKaraoke
                 }
 
                 flpRoom.Controls.Add(btn);
-                //them mot ti comment ne hihi
-                //test xem doi duoc tai khoan chua
-                //Test account lan 2 
-                //Test push may truong
             }
+        }
+
+        void showBill(int id)
+        {
+            lsvBill.Items.Clear();
+
+            List<QuanLyKaraoke.DTO.Menu> listMenu = MenuDAO.Instance.GetListMenuByRoom(BillDAO.Instance.getUncheckedBillByRoomID(id));
+
+            foreach (QuanLyKaraoke.DTO.Menu item in listMenu)
+            {
+                ListViewItem lsvitem = new ListViewItem(item.FoodName.ToString());
+                lsvitem.SubItems.Add(item.Count.ToString());
+                lsvitem.SubItems.Add(item.Price.ToString());
+                lsvitem.SubItems.Add(item.TotalPrice.ToString());
+                lsvBill.Items.Add(lsvitem);
+            }
+        }
+
+        void btn_Click(object sender, EventArgs e)
+        {
+            int Roomid = ((sender as Button).Tag as Room).ID;
+
+            showBill(Roomid);
         }
 
         private void quảnTrịViênToolStripMenuItem_Click(object sender, EventArgs e)
