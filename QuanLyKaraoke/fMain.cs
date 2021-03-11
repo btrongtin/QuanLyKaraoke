@@ -41,6 +41,7 @@ namespace QuanLyKaraoke
                 }
 
                 flpRoom.Controls.Add(btn);
+                //them mot ti comment ne hihi
             }
         }
 
