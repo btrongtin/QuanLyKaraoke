@@ -42,6 +42,7 @@ namespace QuanLyKaraoke
 
                 flpRoom.Controls.Add(btn);
                 //them mot ti comment ne hihi
+                //test xem doi duoc tai khoan chua
             }
         }
 
