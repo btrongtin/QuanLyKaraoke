@@ -44,6 +44,7 @@ namespace QuanLyKaraoke
                 //them mot ti comment ne hihi
                 //test xem doi duoc tai khoan chua
                 //Test account lan 2 
+                //Test push may truong
             }
         }
 
