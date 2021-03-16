@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyKaraoke.DAO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,10 +20,24 @@ namespace QuanLyKaraoke
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            fMain f = new fMain();
-            this.Hide();
-            f.ShowDialog();
-            this.Show();
+            string username = txtId.Text;
+            string password = txtPassword.Text;
+            if(Login(username, password))
+            {
+                fMain f = new fMain();
+                this.Hide();
+                f.ShowDialog();
+                this.Show();
+            }
+            else
+            {
+                MessageBox.Show("Sai tên tài khoản hoặc mật khẩu");
+            }
+        }
+
+        bool Login(string username, string password)
+        {
+            return AccountDAO.Instance.Login(username, password);
         }
 
         private void btnExit_Click(object sender, EventArgs e)

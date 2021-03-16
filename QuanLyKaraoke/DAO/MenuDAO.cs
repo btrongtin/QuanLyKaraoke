@@ -24,7 +24,7 @@ namespace QuanLyKaraoke.DAO
         {
             List<Menu> listmenu = new List<Menu>();
 
-            DataTable data = DataProvider.Instance.ExecuteQuery("Select f.name, bi.count, f.price, totalPrice = f.price * bi.count from bill b, BILLINFO bi, FOOD f where b.id = bi.idBill and f.id = bi.idFood and b.idRoom = "+id);
+            DataTable data = DataProvider.Instance.ExecuteQuery("Select f.name, bi.count, f.price, totalPrice = f.price * bi.count from bill b, BILLINFO bi, FOOD f where b.status =0 and b.id = bi.idBill and f.id = bi.idFood and b.idRoom = " + id);
 
             foreach (DataRow item in data.Rows)
             {

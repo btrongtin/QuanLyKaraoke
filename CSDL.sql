@@ -123,6 +123,8 @@ INSERT INTO BILL(DateCheckIn, DateCheckOut, idRoom, status, discount, totalprice
 			VALUES (GETDATE(), NULL, 3, 1, 20, 50000)
 INSERT INTO BILL(DateCheckIn, DateCheckOut, idRoom, status, discount, totalprice) 
 			VALUES (GETDATE(), NULL, 2, 0, 0, 75000)
+INSERT INTO BILL(DateCheckIn, DateCheckOut, idRoom, status, discount, totalprice) 
+			VALUES (GETDATE(), GETDATE(), 3, 0, 0, 85000)
 
 INSERT INTO BILLINFO(idBill, idFood, count) VALUES(1, 2, 1)
 INSERT INTO BILLINFO(idBill, idFood, count) VALUES(1, 3, 2)
@@ -131,14 +133,111 @@ INSERT INTO BILLINFO(idBill, idFood, count) VALUES(2, 2, 1)
 INSERT INTO BILLINFO(idBill, idFood, count) VALUES(3, 2, 1)
 INSERT INTO BILLINFO(idBill, idFood, count) VALUES(3, 2, 2)
 
+INSERT INTO BILLINFO(idBill, idFood, count) VALUES(4, 2, 2)
+INSERT INTO BILLINFO(idBill, idFood, count) VALUES(4, 3, 1)
+INSERT INTO BILLINFO(idBill, idFood, count) VALUES(4, 4, 3)
+
 select * from FOOD
 select * from FOODCATEGORY
 select * from ACCOUNT
 select * from BILL
 select * from BILLINFO
 
-
 CREATE PROC USP_GetRoomList
 AS SELECT *	FROM food
 GO
-EXEC USP_GetRoomList
+
+CREATE PROC USP_Login
+@userName nvarchar(100), @passWord nvarchar(100)
+AS
+BEGIN
+	SELECT * FROM dbo.Account WHERE UserName = @userName AND PassWord = @passWord
+END
+GO
+
+CREATE PROC USP_InsertBill
+@idRoom INT
+AS
+BEGIN
+	INSERT dbo.Bill 
+	        ( DateCheckIn ,
+	          DateCheckOut ,
+	          idRoom ,
+	          status
+	        )
+	VALUES  ( GETDATE() , -- DateCheckIn - date
+	          NULL , -- DateCheckOut - date
+	          @idRoom , -- idTable - int
+	          0  -- status - int
+	        )
+END
+GO
+
+CREATE PROC USP_InsertBillInfo
+@idBill INT, @idFood INT, @count INT
+AS
+BEGIN
+
+	DECLARE @isExitsBillInfo INT
+	DECLARE @foodCount INT = 1
+	
+	SELECT @isExitsBillInfo = id, @foodCount = b.count 
+	FROM dbo.BillInfo AS b 
+	WHERE idBill = @idBill AND idFood = @idFood
+
+	IF (@isExitsBillInfo > 0)
+	BEGIN
+		DECLARE @newCount INT = @foodCount + @count
+		IF (@newCount > 0)
+			UPDATE dbo.BillInfo	SET count = @foodCount + @count WHERE idFood = @idFood
+		ELSE
+			DELETE dbo.BillInfo WHERE idBill = @idBill AND idFood = @idFood
+	END
+	ELSE
+	BEGIN
+		INSERT	dbo.BillInfo
+        ( idBill, idFood, count )
+		VALUES  ( @idBill, -- idBill - int
+          @idFood, -- idFood - int
+          @count  -- count - int
+          )
+	END
+END
+GO
+
+CREATE TRIGGER UTG_UpdateBillInfo
+ON BILLINFO FOR INSERT, UPDATE
+AS
+BEGIN
+	DECLARE @idbill INT
+	SELECT @idbill = idBill FROM inserted
+	DECLARE @idroom INT
+	SELECT @idroom = idRoom FROM BILL WHERE id = @idbill AND status = 0
+	UPDATE ROOM SET status = N'Có người' WHERE id = @idroom
+END
+GO
+
+CREATE TRIGGER UTG_UpdateBill
+ON BILL FOR UPDATE
+AS
+BEGIN
+	DECLARE @idbill INT
+	SELECT @idbill = id FROM inserted
+	DECLARE @idroom INT
+	SELECT @idroom = idRoom FROM BILL WHERE id = @idbill
+	DECLARE @count INT = 0
+	SELECT @count = COUNT(*) FROM BILL WHERE idRoom = @idroom AND status = 0
+	IF (@count = 0)
+		UPDATE ROOM SET status = N'Trống' WHERE id = @idroom
+END
+GO
+
+
+SELECT * FROM Bill WHERE idRoom = 2 AND status = 1
+select * from BILL
+select * from BILLINFO
+select * from ROOM
+select * from FOODCATEGORY
+delete from BILL
+delete from BILLINFO
+SELECT MAX(id) FROM dbo.Bill

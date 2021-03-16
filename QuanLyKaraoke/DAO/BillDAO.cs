@@ -32,5 +32,28 @@ namespace QuanLyKaraoke.DAO
 
             return -1;
         }
+
+        public void InsertBill(int id)
+        {
+            DataProvider.Instance.ExecuteNonQuery("exec USP_InsertBill @idRoom", new object[] { id });
+        }
+
+        public void CheckOut(int id)
+        {
+            string query = "Update Bill Set status = 1 where id ="+id;
+            DataProvider.Instance.ExecuteNonQuery(query);
+        }
+
+        public int GetMaxIDBill()
+        {
+            try
+            {
+                return (int)DataProvider.Instance.ExecuteScalar("SELECT MAX(id) FROM dbo.Bill");
+            }
+            catch
+            {
+                return 1;
+            }
+        }
     }
 }

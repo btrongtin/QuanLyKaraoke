@@ -33,6 +33,10 @@
             this.quảnTrịViênToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lsvBill = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel3 = new System.Windows.Forms.Panel();
             this.nmFoodCount = new System.Windows.Forms.NumericUpDown();
             this.btnAddFood = new System.Windows.Forms.Button();
@@ -41,7 +45,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnRoomStart = new System.Windows.Forms.Button();
             this.dtpkTimeEnd = new System.Windows.Forms.DateTimePicker();
-            this.dtpkTimeStart = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtRoomPrice = new System.Windows.Forms.TextBox();
@@ -66,10 +69,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnCheckOut = new System.Windows.Forms.Button();
             this.flpRoom = new System.Windows.Forms.FlowLayoutPanel();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -119,12 +119,34 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
+            this.lsvBill.FullRowSelect = true;
+            this.lsvBill.GridLines = true;
             this.lsvBill.Location = new System.Drawing.Point(0, 0);
             this.lsvBill.Name = "lsvBill";
             this.lsvBill.Size = new System.Drawing.Size(622, 241);
             this.lsvBill.TabIndex = 0;
             this.lsvBill.UseCompatibleStateImageBehavior = false;
             this.lsvBill.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Tên món";
+            this.columnHeader1.Width = 246;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Số Lượng";
+            this.columnHeader2.Width = 98;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Đơn giá";
+            this.columnHeader3.Width = 101;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Thành tiền";
+            this.columnHeader4.Width = 146;
             // 
             // panel3
             // 
@@ -140,6 +162,11 @@
             // nmFoodCount
             // 
             this.nmFoodCount.Location = new System.Drawing.Point(558, 19);
+            this.nmFoodCount.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             this.nmFoodCount.Name = "nmFoodCount";
             this.nmFoodCount.Size = new System.Drawing.Size(42, 20);
             this.nmFoodCount.TabIndex = 3;
@@ -152,6 +179,7 @@
             this.btnAddFood.TabIndex = 2;
             this.btnAddFood.Text = "Thêm món";
             this.btnAddFood.UseVisualStyleBackColor = true;
+            this.btnAddFood.Click += new System.EventHandler(this.btnAddFood_Click);
             // 
             // cbFood
             // 
@@ -168,12 +196,13 @@
             this.cbCategory.Name = "cbCategory";
             this.cbCategory.Size = new System.Drawing.Size(476, 21);
             this.cbCategory.TabIndex = 0;
+            this.cbCategory.SelectedIndexChanged += new System.EventHandler(this.cbCategory_SelectedIndexChanged);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.maskedTextBox1);
             this.groupBox1.Controls.Add(this.btnRoomStart);
             this.groupBox1.Controls.Add(this.dtpkTimeEnd);
-            this.groupBox1.Controls.Add(this.dtpkTimeStart);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.txtRoomPrice);
@@ -206,13 +235,6 @@
             this.dtpkTimeEnd.Name = "dtpkTimeEnd";
             this.dtpkTimeEnd.Size = new System.Drawing.Size(215, 20);
             this.dtpkTimeEnd.TabIndex = 9;
-            // 
-            // dtpkTimeStart
-            // 
-            this.dtpkTimeStart.Location = new System.Drawing.Point(401, 24);
-            this.dtpkTimeStart.Name = "dtpkTimeStart";
-            this.dtpkTimeStart.Size = new System.Drawing.Size(215, 20);
-            this.dtpkTimeStart.TabIndex = 8;
             // 
             // label5
             // 
@@ -425,6 +447,7 @@
             this.btnCheckOut.TabIndex = 0;
             this.btnCheckOut.Text = "Thanh toán";
             this.btnCheckOut.UseVisualStyleBackColor = true;
+            this.btnCheckOut.Click += new System.EventHandler(this.btnCheckOut_Click);
             // 
             // flpRoom
             // 
@@ -433,23 +456,15 @@
             this.flpRoom.Size = new System.Drawing.Size(557, 620);
             this.flpRoom.TabIndex = 14;
             // 
-            // columnHeader1
+            // maskedTextBox1
             // 
-            this.columnHeader1.Text = "Ten mon";
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "So Luong";
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Don gia";
-            this.columnHeader3.Width = 122;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Thanh tien";
-            this.columnHeader4.Width = 104;
+            this.maskedTextBox1.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.maskedTextBox1.Location = new System.Drawing.Point(401, 24);
+            this.maskedTextBox1.Mask = "00/00/0000 90:00";
+            this.maskedTextBox1.Name = "maskedTextBox1";
+            this.maskedTextBox1.Size = new System.Drawing.Size(215, 20);
+            this.maskedTextBox1.TabIndex = 11;
+            this.maskedTextBox1.ValidatingType = typeof(System.DateTime);
             // 
             // fMain
             // 
@@ -496,7 +511,6 @@
         private System.Windows.Forms.ComboBox cbCategory;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DateTimePicker dtpkTimeEnd;
-        private System.Windows.Forms.DateTimePicker dtpkTimeStart;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtRoomPrice;
@@ -526,7 +540,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-
-
+        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
     }
 }

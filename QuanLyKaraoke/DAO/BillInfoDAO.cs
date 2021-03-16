@@ -20,19 +20,24 @@ namespace QuanLyKaraoke.DAO
 
         private BillInfoDAO() { }
 
-        public List<BillInfo> GetListBillInfo(int id)
+        //public List<BillInfo> GetListBillInfo(int id)
+        //{
+        //    List<BillInfo> listbillinfo = new List<BillInfo>();
+
+        //    DataTable data = DataProvider.Instance.ExecuteQuery("Select * from billinfo where idBill = "+id);
+
+        //    foreach (DataRow item in data.Rows)
+        //    {
+        //        BillInfo info = new BillInfo(item);
+        //        listbillinfo.Add(info);
+        //    }
+
+        //    return listbillinfo;
+        //}
+
+        public void InsertBillInfo(int idBill, int idFood, int count)
         {
-            List<BillInfo> listbillinfo = new List<BillInfo>();
-
-            DataTable data = DataProvider.Instance.ExecuteQuery("Select * from billinfo where idBill = "+id);
-
-            foreach (DataRow item in data.Rows)
-            {
-                BillInfo info = new BillInfo(item);
-                listbillinfo.Add(info);
-            }
-
-            return listbillinfo;
+            DataProvider.Instance.ExecuteNonQuery("USP_InsertBillInfo @idBill , @idFood , @count", new object[] { idBill, idFood, count });
         }
     }
 }

@@ -90,6 +90,7 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(267, 20);
             this.txtPassword.TabIndex = 1;
+            this.txtPassword.Text = "1";
             this.txtPassword.UseSystemPasswordChar = true;
             // 
             // lblPassword
@@ -117,6 +118,7 @@
             this.txtId.Name = "txtId";
             this.txtId.Size = new System.Drawing.Size(267, 20);
             this.txtId.TabIndex = 1;
+            this.txtId.Text = "admin";
             // 
             // lblId
             // 

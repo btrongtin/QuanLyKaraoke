@@ -18,10 +18,27 @@ namespace QuanLyKaraoke
         {
             InitializeComponent();
             loadRoom();
+            LoadCategory();
+        }
+
+        void LoadCategory()
+        {
+            List<Category> listCategory = CategoryDAO.Instance.GetListCategory();
+            cbCategory.DataSource = listCategory;
+            cbCategory.DisplayMember = "Name";
+        }
+
+        void LoadFoodListByCategoryID(int id)
+        {
+            List<Food> listFood = FoodDAO.Instance.GetFoodByCategoryID(id);
+            cbFood.DataSource = listFood;
+            cbFood.DisplayMember = "Name";
         }
 
         void loadRoom()
         {
+            flpRoom.Controls.Clear();
+
             List<Room> roomlist = RoomDAO.Instance.LoadRoomList();
 
             foreach (Room item in roomlist)
@@ -52,22 +69,27 @@ namespace QuanLyKaraoke
         {
             lsvBill.Items.Clear();
 
-            List<QuanLyKaraoke.DTO.Menu> listMenu = MenuDAO.Instance.GetListMenuByRoom(BillDAO.Instance.getUncheckedBillByRoomID(id));
+            float totalPrice = 0;
 
-            foreach (QuanLyKaraoke.DTO.Menu item in listMenu)
+            List<QuanLyKaraoke.DTO.Menu> listBillInfo = MenuDAO.Instance.GetListMenuByRoom(id);
+            foreach (QuanLyKaraoke.DTO.Menu item in listBillInfo) //listmenu
             {
                 ListViewItem lsvitem = new ListViewItem(item.FoodName.ToString());
                 lsvitem.SubItems.Add(item.Count.ToString());
                 lsvitem.SubItems.Add(item.Price.ToString());
                 lsvitem.SubItems.Add(item.TotalPrice.ToString());
+                totalPrice += item.TotalPrice;
                 lsvBill.Items.Add(lsvitem);
             }
+
+            txtTotalPrice.Text = totalPrice.ToString();
+
         }
 
         void btn_Click(object sender, EventArgs e)
         {
             int Roomid = ((sender as Button).Tag as Room).ID;
-
+            lsvBill.Tag = (sender as Button).Tag;
             showBill(Roomid);
         }
 
@@ -82,6 +104,61 @@ namespace QuanLyKaraoke
         {
             fAccountProfile f = new fAccountProfile();
             f.ShowDialog();
+        }
+
+        private void cbCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int id = 0;
+
+            ComboBox cb = sender as ComboBox;
+
+            if (cb.SelectedItem == null)
+                return;
+
+            Category selected = cb.SelectedItem as Category;
+            id = selected.Id;
+
+            LoadFoodListByCategoryID(id);
+        }
+
+        private void btnAddFood_Click(object sender, EventArgs e)
+        {
+            Room room = lsvBill.Tag as Room;
+
+            int idBill = BillDAO.Instance.getUncheckedBillByRoomID(room.ID);
+            int foodID = (cbFood.SelectedItem as Food).Id;
+            int count = (int)nmFoodCount.Value;
+
+            if (idBill == -1) //phong chua co bill
+            {
+                BillDAO.Instance.InsertBill(room.ID);
+                BillInfoDAO.Instance.InsertBillInfo(BillDAO.Instance.GetMaxIDBill(), foodID, count);
+            }
+            else
+            {
+                BillInfoDAO.Instance.InsertBillInfo(idBill, foodID, count);
+            }
+
+            showBill(room.ID);
+
+            loadRoom();
+        }
+
+        private void btnCheckOut_Click(object sender, EventArgs e)
+        {
+            Room room = lsvBill.Tag as Room;
+
+            int idBill = BillDAO.Instance.getUncheckedBillByRoomID(room.ID);
+
+            if(idBill != -1)
+            {
+                if(MessageBox.Show("Thanh toán cho phòng "+room.Name+"?", "Xác nhận thanh toán", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                {
+                    BillDAO.Instance.CheckOut(idBill);
+                    showBill(room.ID);
+                    loadRoom();
+                }
+            }
         }
     }
 }
