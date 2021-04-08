@@ -55,5 +55,6 @@ namespace QuanLyKaraoke.DTO
             get { return iD; }
             set { iD = value; }
         }
+
     }
 }

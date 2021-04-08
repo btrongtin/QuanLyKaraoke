@@ -20,6 +20,7 @@ namespace QuanLyKaraoke.DAO
 
         private MenuDAO() { }
 
+
         public List<Menu> GetListMenuByRoom(int id)
         {
             List<Menu> listmenu = new List<Menu>();
@@ -34,5 +35,6 @@ namespace QuanLyKaraoke.DAO
 
             return listmenu;
         }
+
     }
 }

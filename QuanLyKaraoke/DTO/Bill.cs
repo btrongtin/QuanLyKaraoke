@@ -29,8 +29,21 @@ namespace QuanLyKaraoke.DTO
             var dateCheckOutTemp = row["dateCheckOut"];
             if(dateCheckOutTemp.ToString() != "")
                 this.dateCheckOut = (DateTime?)row["dateCheckOut"];
-            this.status = (int)status;
+            this.status = (int)row["status"];
         }
+
+        public Bill(DataTable data) //Constructor dung lay gio vao
+        {
+            this.dateCheckIn = (DateTime)data.Rows[0][0];
+        }
+
+
+
+
+
+
+
+
 
 
         public int Status

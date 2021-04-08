@@ -24,6 +24,33 @@ namespace QuanLyKaraoke.DAO
 
         private RoomDAO() { }
 
+        public bool DeleteRoom(int id)
+        {
+            string query = String.Format("DELETE ROOM WHERE ID = {0}", id);
+
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
+        public bool UpdateRoom(int id, string name, float price)
+        {
+            string query = String.Format("UPDATE ROOM SET name = N'{0}', price = {1} WHERE ID = {2}", name, price, id);
+
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
+        public bool InsertRoom(string name, float price)
+        {
+            string query = String.Format("INSERT INTO ROOM(name, price) VALUES (N'{0}', {1})", name, price);
+
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
         public List<Room> LoadRoomList()
         {
             List<Room> roomList = new List<Room>();

@@ -1,4 +1,5 @@
 ﻿using QuanLyKaraoke.DAO;
+using QuanLyKaraoke.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +25,8 @@ namespace QuanLyKaraoke
             string password = txtPassword.Text;
             if(Login(username, password))
             {
-                fMain f = new fMain();
+                Account loginAccount = AccountDAO.Instance.GetAccountByUsername(username);
+                fMain f = new fMain(loginAccount);
                 this.Hide();
                 f.ShowDialog();
                 this.Show();

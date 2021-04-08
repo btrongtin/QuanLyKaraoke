@@ -11,14 +11,14 @@ namespace QuanLyKaraoke.DTO
     {
         private int id;
         private string name;
-        private int categoryID;
+        private int idCategory;
         private float price;
 
-        public Food(int id, string name, int categoryID, float price)
+        public Food(int id, string name, int idCategory, float price)
         {
             this.id = id;
             this.name = name;
-            this.categoryID = categoryID;
+            this.idCategory = idCategory;
             this.price = price;
         }
 
@@ -26,7 +26,9 @@ namespace QuanLyKaraoke.DTO
         {
             this.id = (int)row["id"];
             this.name = row["name"].ToString();
-            this.categoryID = (int)row["ID"];
+            var idCategoryTemp = row["idCategory"];
+            if (idCategoryTemp.ToString() != "")
+                this.idCategory = (int)row["idCategory"];
             this.price = (float)Convert.ToDouble(row["price"].ToString());
         }
 
@@ -56,16 +58,16 @@ namespace QuanLyKaraoke.DTO
             }
         }
 
-        public int CategoryID
+        public int IdCategory
         {
             get
             {
-                return categoryID;
+                return idCategory;
             }
 
             set
             {
-                categoryID = value;
+                idCategory = value;
             }
         }
 

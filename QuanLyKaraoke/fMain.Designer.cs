@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.thôngTinTàiKhoảnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quảnTrịViênToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,8 +44,9 @@
             this.cbFood = new System.Windows.Forms.ComboBox();
             this.cbCategory = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnRoomStart = new System.Windows.Forms.Button();
             this.dtpkTimeEnd = new System.Windows.Forms.DateTimePicker();
+            this.dtpkTimeStart = new System.Windows.Forms.DateTimePicker();
+            this.btnRoomStart = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtRoomPrice = new System.Windows.Forms.TextBox();
@@ -67,9 +69,11 @@
             this.txtCustomerName = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.nmDiscount = new System.Windows.Forms.NumericUpDown();
             this.btnCheckOut = new System.Windows.Forms.Button();
             this.flpRoom = new System.Windows.Forms.FlowLayoutPanel();
-            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
+            this.timerTicker = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -77,6 +81,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmDiscount)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -170,6 +175,11 @@
             this.nmFoodCount.Name = "nmFoodCount";
             this.nmFoodCount.Size = new System.Drawing.Size(42, 20);
             this.nmFoodCount.TabIndex = 3;
+            this.nmFoodCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // btnAddFood
             // 
@@ -200,9 +210,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.maskedTextBox1);
-            this.groupBox1.Controls.Add(this.btnRoomStart);
             this.groupBox1.Controls.Add(this.dtpkTimeEnd);
+            this.groupBox1.Controls.Add(this.dtpkTimeStart);
+            this.groupBox1.Controls.Add(this.btnRoomStart);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.txtRoomPrice);
@@ -219,22 +229,35 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Thông tin phòng";
             // 
-            // btnRoomStart
-            // 
-            this.btnRoomStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRoomStart.Location = new System.Drawing.Point(333, 78);
-            this.btnRoomStart.Name = "btnRoomStart";
-            this.btnRoomStart.Size = new System.Drawing.Size(267, 50);
-            this.btnRoomStart.TabIndex = 10;
-            this.btnRoomStart.Text = "ĐẶT PHÒNG";
-            this.btnRoomStart.UseVisualStyleBackColor = true;
-            // 
             // dtpkTimeEnd
             // 
-            this.dtpkTimeEnd.Location = new System.Drawing.Point(401, 52);
+            this.dtpkTimeEnd.Enabled = false;
+            this.dtpkTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpkTimeEnd.Location = new System.Drawing.Point(400, 52);
             this.dtpkTimeEnd.Name = "dtpkTimeEnd";
-            this.dtpkTimeEnd.Size = new System.Drawing.Size(215, 20);
-            this.dtpkTimeEnd.TabIndex = 9;
+            this.dtpkTimeEnd.Size = new System.Drawing.Size(200, 20);
+            this.dtpkTimeEnd.TabIndex = 12;
+            // 
+            // dtpkTimeStart
+            // 
+            this.dtpkTimeStart.Enabled = false;
+            this.dtpkTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpkTimeStart.Location = new System.Drawing.Point(400, 24);
+            this.dtpkTimeStart.Name = "dtpkTimeStart";
+            this.dtpkTimeStart.Size = new System.Drawing.Size(200, 20);
+            this.dtpkTimeStart.TabIndex = 11;
+            // 
+            // btnRoomStart
+            // 
+            this.btnRoomStart.BackColor = System.Drawing.SystemColors.Control;
+            this.btnRoomStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRoomStart.Location = new System.Drawing.Point(345, 78);
+            this.btnRoomStart.Name = "btnRoomStart";
+            this.btnRoomStart.Size = new System.Drawing.Size(235, 44);
+            this.btnRoomStart.TabIndex = 10;
+            this.btnRoomStart.Text = "ĐẶT PHÒNG";
+            this.btnRoomStart.UseVisualStyleBackColor = false;
+            this.btnRoomStart.Click += new System.EventHandler(this.btnRoomStart_Click);
             // 
             // label5
             // 
@@ -283,9 +306,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(30, 82);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(23, 13);
+            this.label3.Size = new System.Drawing.Size(56, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Giá";
+            this.label3.Text = "Giá phòng";
             // 
             // label2
             // 
@@ -433,11 +456,30 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.label12);
+            this.panel4.Controls.Add(this.nmDiscount);
             this.panel4.Controls.Add(this.btnCheckOut);
             this.panel4.Location = new System.Drawing.Point(582, 604);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(622, 60);
             this.panel4.TabIndex = 13;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(311, 12);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(48, 13);
+            this.label12.TabIndex = 16;
+            this.label12.Text = "Giảm giá";
+            // 
+            // nmDiscount
+            // 
+            this.nmDiscount.Location = new System.Drawing.Point(314, 28);
+            this.nmDiscount.Name = "nmDiscount";
+            this.nmDiscount.Size = new System.Drawing.Size(42, 20);
+            this.nmDiscount.TabIndex = 1;
             // 
             // btnCheckOut
             // 
@@ -451,20 +493,16 @@
             // 
             // flpRoom
             // 
+            this.flpRoom.AutoScroll = true;
             this.flpRoom.Location = new System.Drawing.Point(19, 42);
             this.flpRoom.Name = "flpRoom";
             this.flpRoom.Size = new System.Drawing.Size(557, 620);
             this.flpRoom.TabIndex = 14;
             // 
-            // maskedTextBox1
+            // timerTicker
             // 
-            this.maskedTextBox1.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.maskedTextBox1.Location = new System.Drawing.Point(401, 24);
-            this.maskedTextBox1.Mask = "00/00/0000 90:00";
-            this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(215, 20);
-            this.maskedTextBox1.TabIndex = 11;
-            this.maskedTextBox1.ValidatingType = typeof(System.DateTime);
+            this.timerTicker.Interval = 1000;
+            this.timerTicker.Tick += new System.EventHandler(this.timerTicker_Tick);
             // 
             // fMain
             // 
@@ -492,6 +530,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmDiscount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -510,7 +550,6 @@
         private System.Windows.Forms.ComboBox cbFood;
         private System.Windows.Forms.ComboBox cbCategory;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.DateTimePicker dtpkTimeEnd;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtRoomPrice;
@@ -540,6 +579,10 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown nmDiscount;
+        private System.Windows.Forms.DateTimePicker dtpkTimeStart;
+        private System.Windows.Forms.DateTimePicker dtpkTimeEnd;
+        private System.Windows.Forms.Timer timerTicker;
     }
 }

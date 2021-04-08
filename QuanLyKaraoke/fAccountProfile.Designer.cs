@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.txtPass = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.txtNewPass = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -41,21 +44,18 @@
             this.txtType = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlPassword = new System.Windows.Forms.Panel();
-            this.txtName = new System.Windows.Forms.TextBox();
+            this.txtDisplayname = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.pnlId = new System.Windows.Forms.Panel();
-            this.txtId = new System.Windows.Forms.TextBox();
+            this.txtUsername = new System.Windows.Forms.TextBox();
             this.lblId = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.txtPass = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.pnlPassword.SuspendLayout();
             this.pnlId.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -72,6 +72,33 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(441, 309);
             this.panel1.TabIndex = 1;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.txtPass);
+            this.panel5.Controls.Add(this.label4);
+            this.panel5.Location = new System.Drawing.Point(0, 141);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(441, 39);
+            this.panel5.TabIndex = 5;
+            // 
+            // txtPass
+            // 
+            this.txtPass.Location = new System.Drawing.Point(155, 9);
+            this.txtPass.Name = "txtPass";
+            this.txtPass.Size = new System.Drawing.Size(267, 20);
+            this.txtPass.TabIndex = 1;
+            this.txtPass.UseSystemPasswordChar = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(8, 9);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(79, 20);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Mật khẩu ";
             // 
             // panel3
             // 
@@ -109,6 +136,7 @@
             this.btnUpdate.TabIndex = 7;
             this.btnUpdate.Text = "Cập nhật";
             this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnExit
             // 
@@ -159,11 +187,11 @@
             // 
             // txtType
             // 
+            this.txtType.Enabled = false;
             this.txtType.Location = new System.Drawing.Point(155, 9);
             this.txtType.Name = "txtType";
             this.txtType.Size = new System.Drawing.Size(267, 20);
             this.txtType.TabIndex = 1;
-            this.txtType.UseSystemPasswordChar = true;
             // 
             // label1
             // 
@@ -177,20 +205,19 @@
             // 
             // pnlPassword
             // 
-            this.pnlPassword.Controls.Add(this.txtName);
+            this.pnlPassword.Controls.Add(this.txtDisplayname);
             this.pnlPassword.Controls.Add(this.lblPassword);
             this.pnlPassword.Location = new System.Drawing.Point(0, 53);
             this.pnlPassword.Name = "pnlPassword";
             this.pnlPassword.Size = new System.Drawing.Size(441, 39);
             this.pnlPassword.TabIndex = 3;
             // 
-            // txtName
+            // txtDisplayname
             // 
-            this.txtName.Location = new System.Drawing.Point(155, 9);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(267, 20);
-            this.txtName.TabIndex = 1;
-            this.txtName.UseSystemPasswordChar = true;
+            this.txtDisplayname.Location = new System.Drawing.Point(155, 9);
+            this.txtDisplayname.Name = "txtDisplayname";
+            this.txtDisplayname.Size = new System.Drawing.Size(267, 20);
+            this.txtDisplayname.TabIndex = 1;
             // 
             // lblPassword
             // 
@@ -204,19 +231,19 @@
             // 
             // pnlId
             // 
-            this.pnlId.Controls.Add(this.txtId);
+            this.pnlId.Controls.Add(this.txtUsername);
             this.pnlId.Controls.Add(this.lblId);
             this.pnlId.Location = new System.Drawing.Point(0, 0);
             this.pnlId.Name = "pnlId";
             this.pnlId.Size = new System.Drawing.Size(441, 47);
             this.pnlId.TabIndex = 2;
             // 
-            // txtId
+            // txtUsername
             // 
-            this.txtId.Location = new System.Drawing.Point(155, 14);
-            this.txtId.Name = "txtId";
-            this.txtId.Size = new System.Drawing.Size(267, 20);
-            this.txtId.TabIndex = 1;
+            this.txtUsername.Location = new System.Drawing.Point(155, 14);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(267, 20);
+            this.txtUsername.TabIndex = 1;
             // 
             // lblId
             // 
@@ -228,33 +255,6 @@
             this.lblId.TabIndex = 0;
             this.lblId.Text = "Tên đăng nhập";
             // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.txtPass);
-            this.panel5.Controls.Add(this.label4);
-            this.panel5.Location = new System.Drawing.Point(0, 141);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(441, 39);
-            this.panel5.TabIndex = 5;
-            // 
-            // txtPass
-            // 
-            this.txtPass.Location = new System.Drawing.Point(155, 9);
-            this.txtPass.Name = "txtPass";
-            this.txtPass.Size = new System.Drawing.Size(267, 20);
-            this.txtPass.TabIndex = 1;
-            this.txtPass.UseSystemPasswordChar = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(8, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(79, 20);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Mật khẩu ";
-            // 
             // fAccountProfile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -265,6 +265,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Thông tin tài khoản";
             this.panel1.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -275,8 +277,6 @@
             this.pnlPassword.PerformLayout();
             this.pnlId.ResumeLayout(false);
             this.pnlId.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -294,10 +294,10 @@
         private System.Windows.Forms.TextBox txtType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pnlPassword;
-        private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.TextBox txtDisplayname;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.Panel pnlId;
-        private System.Windows.Forms.TextBox txtId;
+        private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label lblId;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnExit;

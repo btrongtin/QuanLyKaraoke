@@ -27,6 +27,33 @@ namespace QuanLyKaraoke.DAO
 
         private CategoryDAO() { }
 
+        public bool UpdateCategory(int id, string name)
+        {
+            string query = String.Format("UPDATE FOODCATEGORY SET name = N'{0}'WHERE ID = {1}", name, id);
+
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
+        public bool DeleteCategory(int id)
+        {
+            string query = String.Format("DELETE FOODCATEGORY WHERE ID = {0}", id);
+
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
+        public bool InsertCategory(string name)
+        {
+            string query = String.Format("INSERT INTO FOODCATEGORY(name) VALUES (N'{0}')", name);
+
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
         public List<Category> GetListCategory()
         {
             List<Category> list = new List<Category>();
@@ -42,6 +69,23 @@ namespace QuanLyKaraoke.DAO
             }
 
             return list;
+        }
+
+        public Category GetCategoryByID(int id)
+        {
+            Category category = null;
+
+            string query = "select * from FoodCategory where id = " + id;
+
+            DataTable data = DataProvider.Instance.ExecuteQuery(query);
+
+            foreach (DataRow item in data.Rows)
+            {
+                category = new Category(item);
+                return category;
+            }
+
+            return category;
         }
     }
 }

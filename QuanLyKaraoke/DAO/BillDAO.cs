@@ -20,6 +20,32 @@ namespace QuanLyKaraoke.DAO
 
         private BillDAO() { }
 
+
+
+
+
+
+
+
+        public DateTime GetTimeStartByRoom(int id)
+        {
+            DataTable data = DataProvider.Instance.ExecuteQuery("select DateCheckIn from BILL where idRoom = " + id + "and status = 0");
+            try
+            {
+                Bill bill = new Bill(data);
+                return (DateTime)bill.DateCheckIn;
+            }
+            catch { }
+
+            return DateTime.Now;
+        }
+
+
+
+
+
+
+
         public int getUncheckedBillByRoomID(int id)
         {
             DataTable data = DataProvider.Instance.ExecuteQuery("select * from BILL where idRoom = " + id + "  and status = 0");
@@ -38,9 +64,15 @@ namespace QuanLyKaraoke.DAO
             DataProvider.Instance.ExecuteNonQuery("exec USP_InsertBill @idRoom", new object[] { id });
         }
 
-        public void CheckOut(int id)
+        public DataTable GetListBillByDate(DateTime datecheckin, DateTime datecheckout)
         {
-            string query = "Update Bill Set status = 1 where id ="+id;
+            return DataProvider.Instance.ExecuteQuery("Exec USP_GetListBillByDate @datecheckin , @datecheckout", new object[] { datecheckin, datecheckout});
+        }
+
+        public void CheckOut(int id, int discount, float totalprice)
+        {
+            string query = "Update Bill Set status = 1, totalprice = " + totalprice + " , dateCheckOut = getdate()" + ", discount = "+discount +" where id = "+id;
+
             DataProvider.Instance.ExecuteNonQuery(query);
         }
 

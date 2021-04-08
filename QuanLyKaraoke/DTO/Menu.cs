@@ -14,6 +14,9 @@ namespace QuanLyKaraoke.DTO
         private float price;
         private float totalPrice;
 
+        private DateTime? timeStart;
+        private DateTime? timeEnd;
+
         public Menu(string foodName, int count, float price, float totalPrice =0)
         {
             this.foodName = foodName;
@@ -29,6 +32,9 @@ namespace QuanLyKaraoke.DTO
             this.price = (float)Convert.ToDouble(row["price"].ToString());
             this.totalPrice = (float)Convert.ToDouble(row["totalPrice"].ToString());
         }
+
+
+
 
         public float TotalPrice
         {
@@ -52,6 +58,32 @@ namespace QuanLyKaraoke.DTO
         {
             get { return foodName; }
             set { foodName = value; }
+        }
+
+        public DateTime? TimeStart
+        {
+            get
+            {
+                return timeStart;
+            }
+
+            set
+            {
+                timeStart = value;
+            }
+        }
+
+        public DateTime? TimeEnd
+        {
+            get
+            {
+                return timeEnd;
+            }
+
+            set
+            {
+                timeEnd = value;
+            }
         }
     }
 }

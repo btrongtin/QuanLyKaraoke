@@ -20,6 +20,11 @@ namespace QuanLyKaraoke.DAO
 
         private BillInfoDAO() { }
 
+        public void DeleteBillInfoByFoodID(int id)
+        {
+            DataProvider.Instance.ExecuteNonQuery("DELETE BILLINFO WHERE idfood = "+id);
+        }
+
         //public List<BillInfo> GetListBillInfo(int id)
         //{
         //    List<BillInfo> listbillinfo = new List<BillInfo>();

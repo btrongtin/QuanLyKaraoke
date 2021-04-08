@@ -32,26 +32,32 @@ CREATE TABLE FOOD
 (
 	id INT IDENTITY PRIMARY KEY,
 	name NVARCHAR(100) NOT NULL DEFAULT N'Chưa đặt tên',
-	idCategory INT NOT NULL,
+	idCategory INT,
 	price FLOAT NOT NULL DEFAULT 0
 	
-	FOREIGN KEY (idCategory) REFERENCES dbo.FoodCategory(id)
+	FOREIGN KEY (idCategory) REFERENCES dbo.FoodCategory(id) on delete set null
 )
 GO
 
 CREATE TABLE BILL
 (
 	id INT IDENTITY PRIMARY KEY,
-	DateCheckIn DATE NOT NULL DEFAULT GETDATE(),
-	DateCheckOut DATE,
-	idRoom INT NOT NULL,
+	DateCheckIn DATETIME NOT NULL DEFAULT GETDATE(),
+	DateCheckOut DATETIME,
+	idRoom INT,
 	status INT NOT NULL DEFAULT 0, -- 1: đã thanh toán && 0: chưa thanh toán
 	discount int,
 	totalprice float
 	
-	FOREIGN KEY (idRoom) REFERENCES ROOM(id)
+	FOREIGN KEY (idRoom) REFERENCES ROOM(id) on delete set null
 )
 GO
+
+alter table bill add TotalHour TIME
+GO
+update bill set TotalHour = cast((DateCheckOut - DateCheckIn) as time)
+GO
+
 
 CREATE TABLE BILLINFO
 (
@@ -144,7 +150,7 @@ select * from BILL
 select * from BILLINFO
 
 CREATE PROC USP_GetRoomList
-AS SELECT *	FROM food
+AS SELECT *	FROM ROOM
 GO
 
 CREATE PROC USP_Login
@@ -205,6 +211,18 @@ BEGIN
 END
 GO
 
+CREATE TRIGGER UTG_InsertBill
+ON BILL FOR INSERT
+AS
+BEGIN
+	DECLARE @idbill INT
+	SELECT @idbill = ID FROM inserted
+	DECLARE @idroom INT
+	SELECT @idroom = idRoom FROM BILL WHERE id = @idbill AND status = 0
+	UPDATE ROOM SET status = N'Có người' WHERE id = @idroom
+END
+GO
+
 CREATE TRIGGER UTG_UpdateBillInfo
 ON BILLINFO FOR INSERT, UPDATE
 AS
@@ -232,12 +250,72 @@ BEGIN
 END
 GO
 
+CREATE TRIGGER UTG_DeleteBillInfo
+ON BILLINFO FOR DELETE
+AS
+BEGIN
+	DECLARE @idbillinfo INT
+	DECLARE @idbill INT
+	SELECT @idbillinfo = id ,@idbill = idBill FROM deleted
 
-SELECT * FROM Bill WHERE idRoom = 2 AND status = 1
-select * from BILL
+	DECLARE @idroom INT
+	SELECT @idroom = idRoom FROM BILL WHERE id = @idbill
+
+	DECLARE @count INT = 0
+
+	SELECT @count = COUNT(*) FROM BILLINFO AS BI, BILL AS B WHERE B.id = BI.idBill AND B.id = @idbill AND B.status = 0
+
+	IF(@count = 0)
+		UPDATE ROOM SET status = N'Trống' WHERE id = @idroom
+END
+GO
+
+CREATE PROC USP_GetListBillByDate
+@datecheckin SMALLDATETIME, @datecheckout SMALLDATETIME
+AS
+BEGIN
+	SELECT name as N'Tên phòng', DateCheckIn as N'Giờ vào', DateCheckOut as N'Giờ ra', discount as N'Giảm giá (%)', totalprice as N'Tổng tiền'
+	FROM BILL, ROOM
+	WHERE DateCheckIn >= @datecheckin AND DateCheckOut <= @datecheckout
+		AND BILL.status = 1
+		AND BILL.idRoom = ROOM.id
+END
+GO
+
+CREATE PROC USP_UpdateAccount
+@userName NVARCHAR(100), @displayName NVARCHAR(100), @password NVARCHAR(100), @newPassword NVARCHAR(100)
+AS
+BEGIN
+	DECLARE @isRightPass INT = 0
+	
+	SELECT @isRightPass = COUNT(*) FROM dbo.Account WHERE USERName = @userName AND PassWord = @password
+	
+	IF (@isRightPass = 1)
+	BEGIN
+		IF (@newpassword = NULL OR @newpassword = '')
+			UPDATE ACCOUNT SET DisplayName = @displayName WHERE UserName = @userName
+		ELSE
+			UPDATE ACCOUNT SET DisplayName = @displayName, PassWord = @newPassword WHERE UserName = @userName
+	end
+END
+GO
+
+--FUNCTION doi chuoi ve khong dau de so sanh (phuc vu cho tim kiem)
+CREATE FUNCTION [dbo].[fuConvertToUnsign1] ( @strInput NVARCHAR(4000) ) RETURNS NVARCHAR(4000) AS BEGIN IF @strInput IS NULL RETURN @strInput IF @strInput = '' RETURN @strInput DECLARE @RT NVARCHAR(4000) DECLARE @SIGN_CHARS NCHAR(136) DECLARE @UNSIGN_CHARS NCHAR (136) SET @SIGN_CHARS = N'ăâđêôơưàảãạáằẳẵặắầẩẫậấèẻẽẹéềểễệế ìỉĩịíòỏõọóồổỗộốờởỡợớùủũụúừửữựứỳỷỹỵý ĂÂĐÊÔƠƯÀẢÃẠÁẰẲẴẶẮẦẨẪẬẤÈẺẼẸÉỀỂỄỆẾÌỈĨỊÍ ÒỎÕỌÓỒỔỖỘỐỜỞỠỢỚÙỦŨỤÚỪỬỮỰỨỲỶỸỴÝ' +NCHAR(272)+ NCHAR(208) SET @UNSIGN_CHARS = N'aadeoouaaaaaaaaaaaaaaaeeeeeeeeee iiiiiooooooooooooooouuuuuuuuuuyyyyy AADEOOUAAAAAAAAAAAAAAAEEEEEEEEEEIIIII OOOOOOOOOOOOOOOUUUUUUUUUUYYYYYDD' DECLARE @COUNTER int DECLARE @COUNTER1 int SET @COUNTER = 1 WHILE (@COUNTER <=LEN(@strInput)) BEGIN SET @COUNTER1 = 1 WHILE (@COUNTER1 <=LEN(@SIGN_CHARS)+1) BEGIN IF UNICODE(SUBSTRING(@SIGN_CHARS, @COUNTER1,1)) = UNICODE(SUBSTRING(@strInput,@COUNTER ,1) ) BEGIN IF @COUNTER=1 SET @strInput = SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@strInput, @COUNTER+1,LEN(@strInput)-1) ELSE SET @strInput = SUBSTRING(@strInput, 1, @COUNTER-1) +SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@strInput, @COUNTER+1,LEN(@strInput)- @COUNTER) BREAK END SET @COUNTER1 = @COUNTER1 +1 END SET @COUNTER = @COUNTER +1 END SET @strInput = replace(@strInput,' ','-') RETURN @strInput END
+
+
+Exec USP_GetListBillByDate @datecheckin ='2021-03-19 00:00', @datecheckout ='2021-03-19 23:59'
+
+SELECT * FROM ACCOUNT
+select * from FOOD
 select * from BILLINFO
-select * from ROOM
-select * from FOODCATEGORY
-delete from BILL
-delete from BILLINFO
-SELECT MAX(id) FROM dbo.Bill
+
+select DateCheckIn from BILL where idRoom = 17 and status = 0
+
+select * from bill
+
+update bill set totalhour = cast((DateCheckOut - DateCheckIn) as time)
+
+SELECT cast(DateCheckOut as time) [time] --[time] la ten cot trong output
+FROM BILL
+where id = 117
