@@ -37,15 +37,6 @@ namespace QuanLyKaraoke.DTO
             this.dateCheckIn = (DateTime)data.Rows[0][0];
         }
 
-
-
-
-
-
-
-
-
-
         public int Status
         {
             get { return status; }

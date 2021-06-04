@@ -27,7 +27,9 @@ namespace QuanLyKaraoke
             InitializeComponent();
 
             this.LoginAccount = acc;
+
             loadRoom();
+
             LoadCategory();
 
             timerTicker.Start();
@@ -41,14 +43,18 @@ namespace QuanLyKaraoke
         void LoadCategory()
         {
             List<Category> listCategory = CategoryDAO.Instance.GetListCategory();
+
             cbCategory.DataSource = listCategory;
+
             cbCategory.DisplayMember = "Name";
         }
 
         void LoadFoodListByCategoryID(int id)
         {
             List<Food> listFood = FoodDAO.Instance.GetFoodByCategoryID(id);
+
             cbFood.DataSource = listFood;
+
             cbFood.DisplayMember = "Name";
         }
 
@@ -73,6 +79,7 @@ namespace QuanLyKaraoke
                     case "Có người":
                         btn.BackColor = Color.SpringGreen;
                         break;
+
                     default:
                         btn.BackColor = Color.LightGray;
                         break;
@@ -86,42 +93,29 @@ namespace QuanLyKaraoke
         void showBill(int id)
         {
             lsvBill.Items.Clear();
-
-            float totalPrice = 0;
+            
+            float foodTotalPrice = 0;
+            int totalHourInt = 0;
+            float finalTotalPrice = 0;
 
             List<QuanLyKaraoke.DTO.Menu> listBillInfo = MenuDAO.Instance.GetListMenuByRoom(id);
+
             foreach (QuanLyKaraoke.DTO.Menu item in listBillInfo) //listmenu
             {
                 ListViewItem lsvitem = new ListViewItem(item.FoodName.ToString());
                 lsvitem.SubItems.Add(item.Count.ToString());
                 lsvitem.SubItems.Add(item.Price.ToString());
                 lsvitem.SubItems.Add(item.TotalPrice.ToString());
-                totalPrice += item.TotalPrice;
+                foodTotalPrice += item.TotalPrice; //item.totalprice = so luong * don gia mon an
                 lsvBill.Items.Add(lsvitem);
             }
 
-            txtTotalPrice.Text = totalPrice.ToString();
-            txtFoodTotalPrice.Text = totalPrice.ToString();
+            
+            txtFoodTotalPrice.Text = foodTotalPrice.ToString();
 
-        }
+            //hehe
 
-
-
-
-
-        void btn_Click(object sender, EventArgs e) //btn = Room
-        {
-            //int Roomid = ((sender as Button).Tag as Room).ID;
-            Room room = (sender as Button).Tag as Room;
-            lsvBill.Tag = (sender as Button).Tag;
-
-            showBill(room.ID);
-
-
-            dtpkTimeStart.Value = BillDAO.Instance.GetTimeStartByRoom(room.ID);
-            txtRoomId.Text = room.ID.ToString();
-            txtRoomName.Text = room.Name.ToString();
-            txtRoomPrice.Text = room.Price.ToString();
+            dtpkTimeStart.Value = BillDAO.Instance.GetTimeStartByRoom(id);
 
             DateTime startTime = dtpkTimeStart.Value;
 
@@ -129,25 +123,33 @@ namespace QuanLyKaraoke
 
             TimeSpan duration = new TimeSpan(endTime.Ticks - startTime.Ticks);
 
-            txtTotalTime.Text = duration.ToString(@"hh\:mm\:ss");
+            txtTotalTime.Text = duration.ToString(@"hh\:mm");
 
+            totalHourInt = (int)Math.Round(duration.TotalHours, 0);
 
+            if (totalHourInt < 1)
+                totalHourInt = 1;
+            
+            txtRoomTotalPrice.Text = (totalHourInt * Convert.ToInt64(txtRoomPrice.Text)).ToString();
 
+            finalTotalPrice = (float)(Convert.ToDouble(txtFoodTotalPrice.Text) + Convert.ToDouble(txtRoomTotalPrice.Text));
+
+            txtTotalPrice.Text = finalTotalPrice.ToString();
+            
         }
 
+        void btn_Click(object sender, EventArgs e) //btn = Room
+        {
+            Room room = (sender as Button).Tag as Room;
 
+            lsvBill.Tag = (sender as Button).Tag;
 
+            txtRoomId.Text = room.ID.ToString();
+            txtRoomName.Text = room.Name.ToString();
+            txtRoomPrice.Text = room.Price.ToString();
 
-
-
-
-
-
-
-
-
-
-
+            showBill(room.ID);
+        }
 
         private void quảnTrịViênToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -258,11 +260,8 @@ namespace QuanLyKaraoke
 
             if (idBill == -1) //phong chua co bill
             {
-                BillDAO.Instance.InsertBill(room.ID);
-
-
-
-                BillInfoDAO.Instance.InsertBillInfo(BillDAO.Instance.GetMaxIDBill(), foodID, count);
+                MessageBox.Show("Hãy đặt phòng trước!");
+                return;
             }
             else
             {
@@ -282,12 +281,15 @@ namespace QuanLyKaraoke
             int discount = (int)nmDiscount.Value;
             double totalPrice = Convert.ToDouble(txtTotalPrice.Text);
             double finalTotalPrice = totalPrice - (totalPrice * discount / 100);
+            double totalRoomPrice = Convert.ToDouble(txtRoomTotalPrice.Text);
+            double totalFoodPrice = Convert.ToDouble(txtFoodTotalPrice.Text);
 
-            if(idBill != -1)
+
+            if (idBill != -1)
             {
                 if(MessageBox.Show(string.Format("Thanh toán cho phòng {0}?\nTổng tiền: {1} - ({1}*{2}%) = {3}", room.Name, totalPrice, discount, finalTotalPrice), "Xác nhận thanh toán", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
-                    BillDAO.Instance.CheckOut(idBill, discount, (float)finalTotalPrice);
+                    BillDAO.Instance.CheckOut(idBill, discount, (float)finalTotalPrice, (float)totalFoodPrice, (float)totalRoomPrice);
                     showBill(room.ID);
                     loadRoom();
                 }
@@ -303,10 +305,15 @@ namespace QuanLyKaraoke
                 MessageBox.Show("Hãy chọn phòng");
                 return;
             }
-
+            if(BillDAO.Instance.getUncheckedBillByRoomID(room.ID) != -1)
+            {
+                MessageBox.Show("Phòng hiện đang sử dụng!");
+                return;
+            }
             BillDAO.Instance.InsertBill(room.ID);
 
             loadRoom();
+            showBill(room.ID);
         }
 
         private void timerTicker_Tick(object sender, EventArgs e)
@@ -316,12 +323,12 @@ namespace QuanLyKaraoke
             DateTime startTime = dtpkTimeStart.Value;
             DateTime endTime = dtpkTimeEnd.Value;
 
-            if (txtTotalTime.Text != "00:00:00")
+            if (txtTotalTime.Text != "00:00")
             {
                 TimeSpan duration = new TimeSpan(endTime.Ticks - startTime.Ticks);
 
-                txtTotalTime.Text = duration.ToString(@"hh\:mm\:ss");
+                txtTotalTime.Text = duration.ToString(@"hh\:mm");
             }
-        }
+        }     
     }
 }

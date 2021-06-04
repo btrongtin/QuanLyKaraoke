@@ -53,11 +53,11 @@ CREATE TABLE BILL
 )
 GO
 
-alter table bill add TotalHour TIME
-GO
-update bill set TotalHour = cast((DateCheckOut - DateCheckIn) as time)
+alter table bill add totalRoomPrice float
 GO
 
+alter table bill add totalFoodPrice float
+GO
 
 CREATE TABLE BILLINFO
 (
@@ -84,7 +84,7 @@ INSERT INTO ROOM(name,price) VALUES (N'Phòng 9',100000)
 INSERT INTO ROOM(name,price) VALUES (N'Phòng 10',100000)
 INSERT INTO ROOM(name,price) VALUES (N'Phòng 11',100000)
 INSERT INTO ROOM(name,price) VALUES (N'Phòng 12',100000)
-update room	set status = N'Có người' where id = 8 
+
 
 INSERT INTO FOODCATEGORY(name) VALUES (N'Trái cây')
 INSERT INTO FOODCATEGORY(name) VALUES (N'Nước giải khát')
@@ -122,32 +122,6 @@ INSERT INTO FOOD(name, idCategory, price) VALUES (N'Chả ram chiên',4, 60000)
 INSERT INTO ACCOUNT VALUES ('admin', N'Quản trị viên', '1', 1)
 INSERT INTO ACCOUNT VALUES ('staff1', N'Bùi Trọng Tín', '1', 0)
 INSERT INTO ACCOUNT VALUES ('staff2', N'Nguyễn Văn A', '1', 0)
-
-INSERT INTO BILL(DateCheckIn, DateCheckOut, idRoom, status, discount, totalprice) 
-			VALUES (GETDATE(), NULL, 2, 1, 10, 99000)
-INSERT INTO BILL(DateCheckIn, DateCheckOut, idRoom, status, discount, totalprice) 
-			VALUES (GETDATE(), NULL, 3, 1, 20, 50000)
-INSERT INTO BILL(DateCheckIn, DateCheckOut, idRoom, status, discount, totalprice) 
-			VALUES (GETDATE(), NULL, 2, 0, 0, 75000)
-INSERT INTO BILL(DateCheckIn, DateCheckOut, idRoom, status, discount, totalprice) 
-			VALUES (GETDATE(), GETDATE(), 3, 0, 0, 85000)
-
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(1, 2, 1)
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(1, 3, 2)
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(2, 4, 3)
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(2, 2, 1)
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(3, 2, 1)
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(3, 2, 2)
-
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(4, 2, 2)
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(4, 3, 1)
-INSERT INTO BILLINFO(idBill, idFood, count) VALUES(4, 4, 3)
-
-select * from FOOD
-select * from FOODCATEGORY
-select * from ACCOUNT
-select * from BILL
-select * from BILLINFO
 
 CREATE PROC USP_GetRoomList
 AS SELECT *	FROM ROOM
@@ -274,7 +248,7 @@ CREATE PROC USP_GetListBillByDate
 @datecheckin SMALLDATETIME, @datecheckout SMALLDATETIME
 AS
 BEGIN
-	SELECT name as N'Tên phòng', DateCheckIn as N'Giờ vào', DateCheckOut as N'Giờ ra', discount as N'Giảm giá (%)', totalprice as N'Tổng tiền'
+	SELECT name as N'Tên phòng', DateCheckIn as N'Giờ vào', DateCheckOut as N'Giờ ra', totalFoodPrice as N'Tiền dịch vụ', totalRoomPrice as N'Tiền phòng',discount as N'Giảm giá (%)', totalprice as N'Tổng tiền'
 	FROM BILL, ROOM
 	WHERE DateCheckIn >= @datecheckin AND DateCheckOut <= @datecheckout
 		AND BILL.status = 1
@@ -303,19 +277,15 @@ GO
 --FUNCTION doi chuoi ve khong dau de so sanh (phuc vu cho tim kiem)
 CREATE FUNCTION [dbo].[fuConvertToUnsign1] ( @strInput NVARCHAR(4000) ) RETURNS NVARCHAR(4000) AS BEGIN IF @strInput IS NULL RETURN @strInput IF @strInput = '' RETURN @strInput DECLARE @RT NVARCHAR(4000) DECLARE @SIGN_CHARS NCHAR(136) DECLARE @UNSIGN_CHARS NCHAR (136) SET @SIGN_CHARS = N'ăâđêôơưàảãạáằẳẵặắầẩẫậấèẻẽẹéềểễệế ìỉĩịíòỏõọóồổỗộốờởỡợớùủũụúừửữựứỳỷỹỵý ĂÂĐÊÔƠƯÀẢÃẠÁẰẲẴẶẮẦẨẪẬẤÈẺẼẸÉỀỂỄỆẾÌỈĨỊÍ ÒỎÕỌÓỒỔỖỘỐỜỞỠỢỚÙỦŨỤÚỪỬỮỰỨỲỶỸỴÝ' +NCHAR(272)+ NCHAR(208) SET @UNSIGN_CHARS = N'aadeoouaaaaaaaaaaaaaaaeeeeeeeeee iiiiiooooooooooooooouuuuuuuuuuyyyyy AADEOOUAAAAAAAAAAAAAAAEEEEEEEEEEIIIII OOOOOOOOOOOOOOOUUUUUUUUUUYYYYYDD' DECLARE @COUNTER int DECLARE @COUNTER1 int SET @COUNTER = 1 WHILE (@COUNTER <=LEN(@strInput)) BEGIN SET @COUNTER1 = 1 WHILE (@COUNTER1 <=LEN(@SIGN_CHARS)+1) BEGIN IF UNICODE(SUBSTRING(@SIGN_CHARS, @COUNTER1,1)) = UNICODE(SUBSTRING(@strInput,@COUNTER ,1) ) BEGIN IF @COUNTER=1 SET @strInput = SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@strInput, @COUNTER+1,LEN(@strInput)-1) ELSE SET @strInput = SUBSTRING(@strInput, 1, @COUNTER-1) +SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@strInput, @COUNTER+1,LEN(@strInput)- @COUNTER) BREAK END SET @COUNTER1 = @COUNTER1 +1 END SET @COUNTER = @COUNTER +1 END SET @strInput = replace(@strInput,' ','-') RETURN @strInput END
 
+--select  ROOM.name as N'Tên phòng', totalRoomPrice as N'Tiền phòng',discount as N'Giảm giá (%)', totalprice as N'Tổng tiền', FOOD.name as N'Tên món',count as N'Số lượng', FOOD.price as N'Đơn giá'
+--from bill, BILLINFO, FOOD, ROOM
+--where BILL.id = 1150
+--and BILL.id = BILLINFO.idBill
+--and FOOD.id = BILLINFO.idFood
+--and ROOM.id = BILL.idRoom
 
-Exec USP_GetListBillByDate @datecheckin ='2021-03-19 00:00', @datecheckout ='2021-03-19 23:59'
+--update bill set totalhour = cast((DateCheckOut - DateCheckIn) as time)
 
-SELECT * FROM ACCOUNT
-select * from FOOD
-select * from BILLINFO
-
-select DateCheckIn from BILL where idRoom = 17 and status = 0
-
-select * from bill
-
-update bill set totalhour = cast((DateCheckOut - DateCheckIn) as time)
-
-SELECT cast(DateCheckOut as time) [time] --[time] la ten cot trong output
-FROM BILL
-where id = 117
+--SELECT cast(DateCheckOut as time) [time] --[time] la ten cot trong output
+--FROM BILL
+--where id = 117

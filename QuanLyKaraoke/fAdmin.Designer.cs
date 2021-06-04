@@ -77,6 +77,9 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel11 = new System.Windows.Forms.Panel();
             this.panel12 = new System.Windows.Forms.Panel();
+            this.panel27 = new System.Windows.Forms.Panel();
+            this.nmRoomPrice = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
             this.panel20 = new System.Windows.Forms.Panel();
             this.txtRoomStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -111,9 +114,6 @@
             this.btnEditAccount = new System.Windows.Forms.Button();
             this.btnDeleteAccount = new System.Windows.Forms.Button();
             this.btnAddAccount = new System.Windows.Forms.Button();
-            this.panel27 = new System.Windows.Forms.Panel();
-            this.label13 = new System.Windows.Forms.Label();
-            this.nmRoomPrice = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -139,6 +139,8 @@
             this.tabPage4.SuspendLayout();
             this.panel11.SuspendLayout();
             this.panel12.SuspendLayout();
+            this.panel27.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmRoomPrice)).BeginInit();
             this.panel20.SuspendLayout();
             this.panel15.SuspendLayout();
             this.panel18.SuspendLayout();
@@ -153,8 +155,6 @@
             this.panel25.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvAccount)).BeginInit();
             this.panel26.SuspendLayout();
-            this.panel27.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nmRoomPrice)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -637,6 +637,37 @@
             this.panel12.Size = new System.Drawing.Size(263, 353);
             this.panel12.TabIndex = 4;
             // 
+            // panel27
+            // 
+            this.panel27.Controls.Add(this.nmRoomPrice);
+            this.panel27.Controls.Add(this.label13);
+            this.panel27.Location = new System.Drawing.Point(3, 147);
+            this.panel27.Name = "panel27";
+            this.panel27.Size = new System.Drawing.Size(257, 36);
+            this.panel27.TabIndex = 6;
+            // 
+            // nmRoomPrice
+            // 
+            this.nmRoomPrice.Location = new System.Drawing.Point(121, 7);
+            this.nmRoomPrice.Maximum = new decimal(new int[] {
+            500000,
+            0,
+            0,
+            0});
+            this.nmRoomPrice.Name = "nmRoomPrice";
+            this.nmRoomPrice.Size = new System.Drawing.Size(133, 20);
+            this.nmRoomPrice.TabIndex = 1;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(3, 7);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(79, 16);
+            this.label13.TabIndex = 0;
+            this.label13.Text = "Giá phòng";
+            // 
             // panel20
             // 
             this.panel20.Controls.Add(this.txtRoomStatus);
@@ -957,37 +988,6 @@
             this.btnAddAccount.UseVisualStyleBackColor = true;
             this.btnAddAccount.Click += new System.EventHandler(this.btnAddAccount_Click);
             // 
-            // panel27
-            // 
-            this.panel27.Controls.Add(this.nmRoomPrice);
-            this.panel27.Controls.Add(this.label13);
-            this.panel27.Location = new System.Drawing.Point(3, 147);
-            this.panel27.Name = "panel27";
-            this.panel27.Size = new System.Drawing.Size(257, 36);
-            this.panel27.TabIndex = 6;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(3, 7);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(79, 16);
-            this.label13.TabIndex = 0;
-            this.label13.Text = "Giá phòng";
-            // 
-            // nmRoomPrice
-            // 
-            this.nmRoomPrice.Location = new System.Drawing.Point(121, 7);
-            this.nmRoomPrice.Maximum = new decimal(new int[] {
-            500000,
-            0,
-            0,
-            0});
-            this.nmRoomPrice.Name = "nmRoomPrice";
-            this.nmRoomPrice.Size = new System.Drawing.Size(133, 20);
-            this.nmRoomPrice.TabIndex = 1;
-            // 
             // fAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1029,6 +1029,9 @@
             this.tabPage4.ResumeLayout(false);
             this.panel11.ResumeLayout(false);
             this.panel12.ResumeLayout(false);
+            this.panel27.ResumeLayout(false);
+            this.panel27.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmRoomPrice)).EndInit();
             this.panel20.ResumeLayout(false);
             this.panel20.PerformLayout();
             this.panel15.ResumeLayout(false);
@@ -1049,9 +1052,6 @@
             this.panel25.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvAccount)).EndInit();
             this.panel26.ResumeLayout(false);
-            this.panel27.ResumeLayout(false);
-            this.panel27.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nmRoomPrice)).EndInit();
             this.ResumeLayout(false);
 
         }

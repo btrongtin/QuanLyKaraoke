@@ -33,9 +33,6 @@ namespace QuanLyKaraoke.DTO
             this.totalPrice = (float)Convert.ToDouble(row["totalPrice"].ToString());
         }
 
-
-
-
         public float TotalPrice
         {
             get { return totalPrice; }

@@ -49,10 +49,10 @@ namespace QuanLyKaraoke
 
         private void fLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (MessageBox.Show("Bạn thật sự muốn thoát?", "Xác nhận", MessageBoxButtons.OKCancel) != System.Windows.Forms.DialogResult.OK)
-            //{
-            //    e.Cancel = true;
-            //}
+            if (MessageBox.Show("Bạn thật sự muốn thoát?", "Xác nhận", MessageBoxButtons.OKCancel) != System.Windows.Forms.DialogResult.OK)
+            {
+                e.Cancel = true;
+            }
         }
 
         
